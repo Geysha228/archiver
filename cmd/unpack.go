@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"archiver/cmd/lib"
 	"io"
 	"os"
 	"path/filepath"
@@ -40,8 +41,7 @@ func unpack(_ *cobra.Command, args []string){
 		handleErr(err)
 	}
 
-	//packed := lib.Decode(string(data))
-	packed := "q" + string(data)
+	packed := lib.Decode(string(data))
 
 	err = os.WriteFile(unpackedFileName(filePath), []byte(packed), 0644)
 	if err != nil {

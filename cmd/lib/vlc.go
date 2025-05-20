@@ -21,12 +21,16 @@ func Decode(encodeText string) string {
 
 	hChunks := NewHexChunks(encodeText)
 
-	_ = hChunks
+	bChunks := hChunks.ToBinary()
 
-	res := ""
-	return res
+	bString := bChunks.Join()
+
+	dTree := getEncodingTable().DecodingTree() 
+
+	res := dTree.Decode(bString)
+
+	return exportText(res)
 }
-
 
 func prepareText(str string) string {
 	var buf strings.Builder
@@ -36,6 +40,27 @@ func prepareText(str string) string {
 			buf.WriteRune('!')
 			buf.WriteRune(unicode.ToLower(ch))
 		} else {
+			buf.WriteRune(ch)
+		}
+	}
+	return buf.String()
+}
+
+func exportText(str string) string {
+	var buf strings.Builder
+
+	var isCapital bool
+
+	for _, ch := range str {
+		if isCapital {
+			buf.WriteRune(unicode.ToUpper(ch))
+			isCapital = false 
+			continue
+		}
+		if ch == '!'{
+			isCapital = true
+			continue
+		}else{
 			buf.WriteRune(ch)
 		}
 	}

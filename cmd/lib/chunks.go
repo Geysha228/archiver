@@ -39,6 +39,36 @@ func (hxChs HexChunks) ToString() string {
 	return buf.String()
 }
 
+func (hxChs HexChunks) ToBinary()BinaryChunks{
+	res:= make(BinaryChunks, 0, len(hxChs))
+
+	for _, chunk := range hxChs{
+		bChunk := chunk.ToBinary()
+
+		res=append(res, bChunk)
+	}
+	return res
+}
+
+func (hxCh HexChunk) ToBinary() BinaryChunk {
+	num, err := strconv.ParseUint(string(hxCh), 16, 8)
+	if err != nil {
+		panic("can't parse hex chunk: " + err.Error())
+	}
+
+	res:=fmt.Sprintf("%08b", num)
+	return BinaryChunk(res)
+}
+
+func (bcs BinaryChunks) Join() string {
+	var buf strings.Builder
+
+	for _, bc := range bcs {
+		buf.WriteString(string(bc))
+	}
+	return buf.String()
+}
+
 func (bnChs BinaryChunks) ToHex() HexChunks {
 
 	hexSize := len(bnChs)
